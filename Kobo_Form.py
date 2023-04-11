@@ -27,6 +27,7 @@ class Kobo_Form:
     # Remove previous list of projects, goals, and kpis to make room for the current set.
     def remove_old_choices(self):
 
+        print('Removing old choices')
         for i, choice in enumerate(self.choices[:]):
             if choice['list_name'] == 'projects':
                 self.choices.remove(choice)
@@ -38,6 +39,7 @@ class Kobo_Form:
     # Add new choices
     def add_projects(self, projects):
 
+        print('Adding projects')
         # Filter the projects by country initials
         filtered_projects = [project for project in projects if
                              project.project_number.startswith(self.country_initials)]
@@ -58,8 +60,25 @@ class Kobo_Form:
 
             self.choices.append({'name': project.project_number, 'label': label, 'list_name': 'projects'})
 
+    def add_goals_and_kpis(self, mel_list):
+        print('Adding Goals')
+        goals = {}
+        kpis = {}
+        for measure in mel_list:
+            if measure.goal_id not in goals:
+                goals[measure.goal_id] = measure.goal_name
+            if measure.kpi_id not in kpis:
+                kpis[measure.kpi_id] = measure.kpi_name
+
+        for goal in goals:
+            self.choices.append({'name': goal['Goal_Id'], 'label': [goal['Goal'], goal['Goal']], 'list_name': 'goals'})
+
+        for kpi in kpis:
+            self.choices.append({'name': kpi['KPI_Id'], 'label': [kpi['KPI'], kpi['KPI']], 'list_name': 'kpis'})
+
     def patch_new_choices(self):
 
+        print('Patchingnew choices')
         patch = requests.patch(url=self.asset_url, headers=HEADERS, params=PARAMS,
                                data={'content': json.dumps(self.content)})
 
