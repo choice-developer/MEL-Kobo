@@ -42,11 +42,34 @@ for kpi in kpi_list:
     k_list.append(new_kpi)
 
 print('Sorting projects')
-sorted_projects = sorted(p_list, key=lambda x: x.project_number)
+sorted_projects = sorted(p_list, key=lambda x: x.project_number, reverse=True)
 # Country Kobo forms ---------------------------------------------------------------------------------------------------
-master = Kobo_Form.Kobo_Form(form_id='aSRZnHY3HetTW6aebkNcWR', country_initials='BO')
-master.remove_old_choices()
-master.add_projects(sorted_projects)
-master.add_goals_and_kpis(k_list)
-master.patch_new_choices()
+countries = []
+master = {'form_id': 'aSRZnHY3HetTW6aebkNcWR', 'country_initials': 'BO'}
+countries.append(master)
+bolivia = {'form_id': 'aQ9dbQp39aifjsdGAT2nzw', 'country_initials': 'BO'}
+countries.append(bolivia)
+ecuador = {'form_id': 'aHk7b4jAy25B9oJZ4xmtNV', 'country_initials': 'EC'}
+countries.append(ecuador)
+guatemala = {'form_id': 'aKYhWCXVCLrCUSnhZC9WrE', 'country_initials': 'GT'}
+countries.append(guatemala)
+kenya = {'form_id': 'aCBfp4doT8NCnB2rhr3JVj', 'country_initials': 'KE'}
+countries.append(kenya)
+mexico = {'form_id': 'aAoCzjyX6Q8SfhR5FstrgS', 'country_initials': 'MX'}
+countries.append(mexico)
+nepal = {'form_id': 'aEAdZTnffjhYqiSgkXotU3', 'country_initials': 'NP'}
+countries.append(nepal)
+navajo = {'form_id': 'aGzHbMRVGkFY6uNgp27UBT', 'country_initials': 'NV'}
+countries.append(navajo)
+peru = {'form_id': 'aScuYamPgmcPbWENwAoJgF', 'country_initials': 'PE'}
+countries.append(peru)
+
+for country in countries:
+    print(f'Country: {country["country_initials"]}')
+    new_form = Kobo_Form.Kobo_Form(form_id=country['form_id'], country_initials=country['country_initials'])
+    new_form.remove_old_choices()
+    new_form.add_projects(projects=sorted_projects)
+    new_form.add_goals_and_kpis(mel_list=k_list)
+    new_form.patch_new_choices()
+    new_form.deploy_new_form()
 
